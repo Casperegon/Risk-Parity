@@ -45,7 +45,7 @@ pip install numpy pandas scipy matplotlib
 
 ```python
 import pandas as pd
-from risk_parity import rolling_rp_backtest
+from Old_iterations.risk_parity import rolling_rp_backtest
 
 # Load your returns (DataFrame with dates as index, assets as columns)
 returns = pd.read_csv('your_returns.csv', index_col=0, parse_dates=True)
@@ -53,8 +53,8 @@ returns = pd.read_csv('your_returns.csv', index_col=0, parse_dates=True)
 # Run backtest
 weights_df, risk_contrib_df, portfolio_vol_df, rebalance_dates = rolling_rp_backtest(
     returns=returns,
-    rebalance_freq='M',      # Monthly rebalancing
-    lookback_window=252      # 1-year rolling window
+    rebalance_freq='M',  # Monthly rebalancing
+    lookback_window=252  # 1-year rolling window
 )
 
 # Analyze results
@@ -147,13 +147,15 @@ This generates synthetic 5-asset returns and creates visualizations showing:
 To use EWMA or shrinkage instead of rolling sample covariance:
 
 ```python
-from risk_parity import compute_rp_weights
+from Old_iterations.risk_parity import compute_rp_weights
+
 
 def estimate_ewma_covariance(returns, lambda_param=0.94):
     """Your custom estimator"""
     # Implement EWMA logic
     # Return same structure as estimate_rolling_covariance
     pass
+
 
 # Use in backtest
 cov_result = estimate_ewma_covariance(returns)
@@ -166,7 +168,7 @@ weights, success = compute_rp_weights(cov_matrix)
 For leverage constraints, maximum weight limits, or sector constraints:
 
 ```python
-from risk_parity import compute_rp_weights
+from Old_iterations.risk_parity import compute_rp_weights
 
 # Modify compute_rp_weights() bounds or constraints
 # Example: max 40% in any single asset

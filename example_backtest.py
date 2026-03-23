@@ -11,21 +11,16 @@ This script demonstrates how to:
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
-import sys
-import os
 
 # Import the risk parity module
-from risk_parity import (
+from Old_iterations.risk_parity import (
     rolling_rp_backtest,
     detect_weight_regime_shifts,
     plot_rp_weights_over_time,
     plot_risk_contributions,
     plot_regime_shifts,
     plot_portfolio_vol,
-    print_backtest_summary,
-    compute_risk_contributions,
-    compute_rp_weights
+    print_backtest_summary
 )
 
 
