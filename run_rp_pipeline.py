@@ -89,7 +89,6 @@ def connect_to_datastream(logger):
         logger.error(f"✗ Failed to connect to Datastream: {e}")
         raise
 
-
 # ============================================================================
 # DATA FETCHING
 # ============================================================================
@@ -142,7 +141,7 @@ def clean_price_series(data, column_name, jump_threshold=2.0, logger=None):
 def fetch_futures_data(DS, symbol, column_name, start_date, end_date, fields_to_try=None, logger=None):
     """Fetch futures data with fallback field logic."""
     if fields_to_try is None:
-        fields_to_try = ['P', 'PO', 'PS']
+        fields_to_try = ['P', 'PS', 'P0']
     
     for field in fields_to_try:
         try:
@@ -264,17 +263,16 @@ def fetch_futures(DS, start_date, end_date, logger):
 # ============================================================================
 # DATA CLEANING & PROCESSING
 # ============================================================================
-
-def clean_and_process_data(price_data, dataset_name, logger):
+#def clean_and_process_data(price_data, dataset_name, logger):
     """Clean price data and calculate returns."""
     logger.info(f"Processing {dataset_name}...")
     
     # Remove rows with all NaN
     price_data = price_data.dropna(how='all')
     
-    # Forward fill then back fill to handle gaps (compatible with pandas 2.0+)
-    price_data = price_data.ffill().bfill()
-    
+    # Forward fill then back fill to handle gaps
+    price_data = price_data.fillna(method='ffill').fillna(method='bfill')
+
     # Remove columns with too many missing values
     missing_pct = price_data.isna().sum() / len(price_data) * 100
     cols_to_drop = missing_pct[missing_pct > 50].index.tolist()
@@ -289,6 +287,31 @@ def clean_and_process_data(price_data, dataset_name, logger):
     logger.info(f"  Cleaned data: {len(returns)} rows, {len(returns.columns)} assets")
     logger.info(f"  Date range: {returns.index[0].strftime('%Y-%m-%d')} to {returns.index[-1].strftime('%Y-%m-%d')}")
     
+    return returns
+
+def clean_and_process_data(price_data, dataset_name, logger):
+    """Clean price data and calculate returns."""
+    logger.info(f"Processing {dataset_name}...")
+
+    # Remove rows where ALL columns are NaN
+    price_data = price_data.dropna(how='all')
+
+    # Remove columns with too many missing values
+    missing_pct = price_data.isna().sum() / len(price_data) * 100
+    cols_to_drop = missing_pct[missing_pct > 50].index.tolist()
+
+    if cols_to_drop:
+        logger.info(f"  Dropping {len(cols_to_drop)} columns with >50% missing data: {cols_to_drop}")
+        price_data = price_data.drop(columns=cols_to_drop)
+
+    # Calculate daily returns — behold NaN, kovariansestimatoren håndterer dem
+    returns = price_data.pct_change()
+    #Remove return rows with all NaN
+    returns.dropna(how='all', inplace=True)
+
+    logger.info(f"  Cleaned data: {len(returns)} rows, {len(returns.columns)} assets")
+    logger.info(f"  Date range: {returns.index[0].strftime('%Y-%m-%d')} to {returns.index[-1].strftime('%Y-%m-%d')}")
+
     return returns
 
 
@@ -382,9 +405,9 @@ def main():
     
     try:
         # Date range for data collection
-        start_gics = '20160901'
+        start_gics = '20160901' #Valgt den dato, hvor der er data fra alle aktiver
         end_gics = datetime.today().strftime('%Y%m%d')
-        start_futures = '20060915'
+        start_futures = '20060915' #Valgt den dato, hvor der er data fra alle aktiver
         end_futures = datetime.today().strftime('%Y%m%d')
         
         output_dir = 'output'
