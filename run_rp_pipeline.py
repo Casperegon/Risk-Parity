@@ -264,28 +264,28 @@ def fetch_futures(DS, start_date, end_date, logger):
 # DATA CLEANING & PROCESSING
 # ============================================================================
 #def clean_and_process_data(price_data, dataset_name, logger):
-    """Clean price data and calculate returns."""
-    logger.info(f"Processing {dataset_name}...")
+    #"""Clean price data and calculate returns."""
+    #logger.info(f"Processing {dataset_name}...")
     
     # Remove rows with all NaN
-    price_data = price_data.dropna(how='all')
+    #price_data = price_data.dropna(how='all')
     
     # Forward fill then back fill to handle gaps
-    price_data = price_data.fillna(method='ffill').fillna(method='bfill')
+    #price_data = price_data.fillna(method='ffill').fillna(method='bfill')
 
     # Remove columns with too many missing values
-    missing_pct = price_data.isna().sum() / len(price_data) * 100
-    cols_to_drop = missing_pct[missing_pct > 50].index.tolist()
+    #missing_pct = price_data.isna().sum() / len(price_data) * 100
+    #cols_to_drop = missing_pct[missing_pct > 50].index.tolist()
     
-    if cols_to_drop:
-        logger.info(f"  Dropping {len(cols_to_drop)} columns with >50% missing data: {cols_to_drop}")
-        price_data = price_data.drop(columns=cols_to_drop)
+    #if cols_to_drop:
+    #    logger.info(f"  Dropping {len(cols_to_drop)} columns with >50% missing data: {cols_to_drop}")
+    #    price_data = price_data.drop(columns=cols_to_drop)
     
     # Calculate daily returns
-    returns = price_data.pct_change().dropna()
+    #returns = price_data.pct_change().dropna()
     
-    logger.info(f"  Cleaned data: {len(returns)} rows, {len(returns.columns)} assets")
-    logger.info(f"  Date range: {returns.index[0].strftime('%Y-%m-%d')} to {returns.index[-1].strftime('%Y-%m-%d')}")
+    #logger.info(f"  Cleaned data: {len(returns)} rows, {len(returns.columns)} assets")
+    #logger.info(f"  Date range: {returns.index[0].strftime('%Y-%m-%d')} to {returns.index[-1].strftime('%Y-%m-%d')}")
     
     return returns
 
