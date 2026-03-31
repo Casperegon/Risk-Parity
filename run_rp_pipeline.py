@@ -81,7 +81,7 @@ def connect_to_datastream(logger):
             raise Exception("Datastream credentials not found")
         
         DS = Datastream(username=DS_USERNAME, password=DS_PASSWORD)
-        logger.info(f"✓ Connected to Datastream as user {DS_USERNAME}")
+        logger.info(f"Successfully Connected to Datastream as user {DS_USERNAME}")
         
         return DS
     
@@ -203,7 +203,7 @@ def fetch_gics_sectors(DS, start_date, end_date, logger):
         logger.error("✗ No GICS data was fetched")
         raise ValueError("GICS data fetch failed")
     
-    logger.info(f"✓ Fetched GICS data: {len(gics_data)} rows, {len(gics_data.columns)} sectors")
+    logger.info(f"Successfully Fetched GICS data: {len(gics_data)} rows, {len(gics_data.columns)} sectors")
     return gics_data
 
 
@@ -256,7 +256,7 @@ def fetch_futures(DS, start_date, end_date, logger):
         logger.error("✗ No futures data was fetched")
         raise ValueError("Futures data fetch failed")
     
-    logger.info(f"✓ Fetched futures data: {len(futures_data)} rows, {len(futures_data.columns)} assets")
+    logger.info(f"Successfully Fetched futures data: {len(futures_data)} rows, {len(futures_data.columns)} assets")
     return futures_data
 
 
@@ -342,7 +342,7 @@ def run_risk_parity_backtest(returns, dataset_name, logger):
             cov_estimator=COV_ESTIMATOR,
         )
         
-        logger.info(f"✓ Optimization completed: {len(weights_df)} rebalances")
+        logger.info(f"Successfully Optimization completed: {len(weights_df)} rebalances")
         logger.info(f"  Date range: {weights_df.index[0].strftime('%Y-%m-%d')} to {weights_df.index[-1].strftime('%Y-%m-%d')}")
         
         return weights_df, risk_contrib_df, portfolio_vol_df
@@ -374,10 +374,10 @@ def save_results(weights_df, risk_contrib_df, portfolio_vol_df, returns, dataset
     portfolio_vol_df.to_csv(portfolio_vol_file)
     returns.to_csv(returns_file)
     
-    logger.info(f"✓ Saved weights: {weights_file}")
-    logger.info(f"✓ Saved risk contributions: {risk_contrib_file}")
-    logger.info(f"✓ Saved portfolio volatility: {portfolio_vol_file}")
-    logger.info(f"✓ Saved returns: {returns_file}")
+    logger.info(f"Successfully Saved weights: {weights_file}")
+    logger.info(f"Successfully Saved risk contributions: {risk_contrib_file}")
+    logger.info(f"Successfully saved portfolio volatility: {portfolio_vol_file}")
+    logger.info(f"Successfully Saved returns: {returns_file}")
     
     # Print summary statistics
     logger.info(f"\n--- Summary Statistics for {dataset_name} ---")
